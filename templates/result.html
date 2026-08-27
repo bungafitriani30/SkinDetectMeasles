@@ -1,3 +1,4 @@
+```html
 <!doctype html>
 <html lang="id">
 
@@ -27,7 +28,7 @@
 
         .result-image-box img {
             width: 100%;
-            max-height: 330px;
+            height: 260px;
             display: block;
             object-fit: cover;
         }
@@ -55,7 +56,6 @@
 
         .result-label {
             display: block;
-
             margin-bottom: 8px;
 
             font-size: 11px;
@@ -254,10 +254,17 @@
 
         <div class="result-image-box">
 
-            <img
-                src="{{ url_for('static', filename='uploads/' + filename) }}"
-                alt="Citra kulit yang diperiksa"
-            >
+            {% if image_url %}
+                <img
+                    src="{{ image_url }}"
+                    alt="Citra kulit yang diperiksa"
+                >
+            {% else %}
+                <img
+                    src="{{ url_for('static', filename='uploads/' + filename) }}"
+                    alt="Citra kulit yang diperiksa"
+                >
+            {% endif %}
 
         </div>
 
@@ -283,11 +290,6 @@
             <h1 class="result-disease">
                 {{ prediction }}
             </h1>
-
-
-            <!-- ======================================
-                 DESKRIPSI HASIL
-            ======================================= -->
 
 
             {% if prediction == "Measles" %}
@@ -330,11 +332,6 @@
         </div>
 
 
-        <!-- ======================================
-             CONFIDENCE
-        ======================================= -->
-
-
         <div class="confidence-box">
 
             <span>
@@ -346,11 +343,6 @@
             </strong>
 
         </div>
-
-
-        <!-- ======================================
-             MEASLES
-        ======================================= -->
 
 
         {% if prediction == "Measles" %}
@@ -413,11 +405,6 @@
         </div>
 
 
-        <!-- ======================================
-             CHICKENPOX
-        ======================================= -->
-
-
         {% elif prediction == "Chickenpox" %}
 
 
@@ -475,11 +462,6 @@
             </ul>
 
         </div>
-
-
-        <!-- ======================================
-             MONKEYPOX
-        ======================================= -->
 
 
         {% elif prediction == "Monkeypox" %}
@@ -543,11 +525,6 @@
         </div>
 
 
-        <!-- ======================================
-             DERMATITIS
-        ======================================= -->
-
-
         {% elif prediction == "Dermatitis Eksim" %}
 
 
@@ -607,11 +584,6 @@
 
 
         {% endif %}
-
-
-        <!-- ======================================
-             PERINGATAN
-        ======================================= -->
 
 
         <div class="warning-box">
@@ -711,3 +683,4 @@
 </body>
 
 </html>
+```
