@@ -1,3 +1,4 @@
+```html
 <!doctype html>
 <html lang="id">
 
@@ -17,6 +18,124 @@
     >
 
     <style>
+
+        /* ================================
+           HISTORY CARD
+        ================================= */
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .history-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+
+            position: relative;
+
+            width: 100%;
+            box-sizing: border-box;
+
+            padding: 14px;
+
+            border: 1px solid #efd8d4;
+            border-radius: 18px;
+
+            background: #fff;
+        }
+
+        .history-image {
+            width: 88px;
+            height: 88px;
+
+            min-width: 88px;
+
+            display: block;
+
+            object-fit: cover;
+
+            border-radius: 14px;
+
+            flex-shrink: 0;
+        }
+
+        .history-info {
+            flex: 1;
+            min-width: 0;
+
+            padding-right: 35px;
+        }
+
+        .history-info span {
+            display: block;
+
+            margin-bottom: 5px;
+
+            color: #b15d54;
+
+            font-size: 9px;
+            letter-spacing: 2px;
+        }
+
+        .history-info h3 {
+            margin: 0 0 6px;
+
+            color: #7c302e;
+
+            font-size: 18px;
+        }
+
+        .history-info p {
+            margin: 0 0 5px;
+
+            color: #777;
+
+            font-size: 13px;
+        }
+
+        .history-info strong {
+            color: #a53c3c;
+        }
+
+        .history-info small {
+            display: block;
+
+            color: #999;
+
+            font-size: 11px;
+            line-height: 1.4;
+        }
+
+        .history-delete {
+            position: absolute;
+
+            top: 50%;
+            right: 12px;
+
+            transform: translateY(-50%);
+
+            width: 32px;
+            height: 32px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border: none;
+            border-radius: 50%;
+
+            background: #fde4df;
+            color: #b94b4b;
+
+            font-size: 20px;
+
+            cursor: pointer;
+        }
+
+
         /* ================================
            POPUP KONFIRMASI
         ================================= */
@@ -129,6 +248,7 @@
         .delete-form button {
             width: 100%;
         }
+
     </style>
 
 </head>
@@ -206,11 +326,23 @@
             <div class="history-card">
 
 
-                <img
-                    src="{{ url_for('static', filename='uploads/' + item.nama_gambar) }}"
-                    class="history-image"
-                    alt="Citra kulit"
-                >
+                {% if item.image_url %}
+
+                    <img
+                        src="{{ item.image_url }}"
+                        alt="Citra kulit"
+                        class="history-image"
+                    >
+
+                {% else %}
+
+                    <img
+                        src="{{ url_for('uploaded_file', filename=item.nama_gambar) }}"
+                        alt="Citra kulit"
+                        class="history-image"
+                    >
+
+                {% endif %}
 
 
                 <div class="history-info">
@@ -238,7 +370,6 @@
                 </div>
 
 
-                <!-- TOMBOL X -->
                 <button
                     type="button"
                     class="history-delete btn-delete-one"
@@ -335,10 +466,6 @@
 </div>
 
 
-<!-- =====================================
-     POPUP HAPUS SATU
-===================================== -->
-
 <div
     class="modal-overlay"
     id="modalHapus"
@@ -392,10 +519,6 @@
 
 </div>
 
-
-<!-- =====================================
-     POPUP HAPUS SEMUA
-===================================== -->
 
 <div
     class="modal-overlay"
@@ -479,10 +602,6 @@ document.addEventListener(
             );
 
 
-        // =====================================
-        // HAPUS SATU
-        // =====================================
-
         const tombolHapus =
             document.querySelectorAll(
                 ".btn-delete-one"
@@ -523,10 +642,6 @@ document.addEventListener(
         );
 
 
-        // =====================================
-        // BATAL HAPUS SATU
-        // =====================================
-
         document.getElementById(
             "batalHapus"
         ).addEventListener(
@@ -540,10 +655,6 @@ document.addEventListener(
             }
         );
 
-
-        // =====================================
-        // HAPUS SEMUA
-        // =====================================
 
         const btnSemua =
             document.getElementById(
@@ -567,10 +678,6 @@ document.addEventListener(
         }
 
 
-        // =====================================
-        // BATAL HAPUS SEMUA
-        // =====================================
-
         document.getElementById(
             "batalHapusSemua"
         ).addEventListener(
@@ -584,10 +691,6 @@ document.addEventListener(
             }
         );
 
-
-        // =====================================
-        // KLIK DI LUAR POPUP
-        // =====================================
 
         modalHapus.addEventListener(
             "click",
@@ -635,3 +738,4 @@ document.addEventListener(
 </body>
 
 </html>
+```
