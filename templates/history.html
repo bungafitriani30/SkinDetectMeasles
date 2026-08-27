@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Riwayat Deteksi</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+    <style>
+        /* ================================
+           POPUP KONFIRMASI
+        ================================= */
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+
+            background: rgba(0, 0, 0, 0.45);
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+
+            z-index: 99999;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: white;
+
+            width: 100%;
+            max-width: 340px;
+
+            border-radius: 22px;
+
+            padding: 28px 22px;
+
+            text-align: center;
+
+            box-shadow: 0 15px 40px
+                rgba(0, 0, 0, 0.20);
+        }
+
+        .modal-icon {
+            width: 60px;
+            height: 60px;
+
+            margin: 0 auto 16px;
+
+            border-radius: 50%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #f8dddd;
+            color: #a53c3c;
+
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .modal-box h3 {
+            margin: 0 0 10px;
+            color: #672b2b;
+        }
+
+        .modal-box p {
+            margin: 0;
+
+            color: #777;
+
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .modal-buttons {
+            display: flex;
+
+            gap: 10px;
+
+            margin-top: 24px;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+
+            padding: 13px;
+
+            border-radius: 12px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+        }
+
+        .btn-batal {
+            border: 1px solid #ddd;
+            background: white;
+            color: #555;
+        }
+
+        .btn-hapus {
+            border: none;
+            background: #a53c3c;
+            color: white;
+        }
+
+        .delete-form {
+            flex: 1;
+            margin: 0;
+        }
+
+        .delete-form button {
+            width: 100%;
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="mobile-app">
+
+
+    <header class="simple-header">
+
+        <a
+            href="/"
+            class="back-button"
+        >
+            ‹
+        </a>
+
+        <div>
+
+            <span class="mini-title">
+                DATA PEMERIKSAAN
+            </span>
+
+            <h2>
+                Riwayat Deteksi
+            </h2>
+
+        </div>
+
+    </header>
+
+
+    <main class="content">
+
+
+        <div class="page-intro history-intro">
+
+            <div class="small-illustration">
+                ◷
+            </div>
+
+            <h1>
+                Riwayat Prediksi
+            </h1>
+
+            <p>
+                Hasil deteksi yang telah dilakukan
+                akan tersimpan pada halaman ini.
+            </p>
+
+        </div>
+
+
+        {% if db_error %}
+
+        <div class="error-message">
+            {{ db_error }}
+        </div>
+
+        {% endif %}
+
+
+        {% if data %}
+
+
+        <div class="history-list">
+
+
+            {% for item in data %}
+
+
+            <div class="history-card">
+
+
+                <img
+                    src="{{ url_for('static', filename='uploads/' + item.nama_gambar) }}"
+                    class="history-image"
+                    alt="Citra kulit"
+                >
+
+
+                <div class="history-info">
+
+                    <span>
+                        HASIL DETEKSI
+                    </span>
+
+                    <h3>
+                        {{ item.nama_kelas }}
+                    </h3>
+
+                    <p>
+                        Confidence
+
+                        <strong>
+                            {{ item.confidence }}%
+                        </strong>
+                    </p>
+
+                    <small>
+                        {{ item.tanggal_prediksi }}
+                    </small>
+
+                </div>
+
+
+                <!-- TOMBOL X -->
+                <button
+                    type="button"
+                    class="history-delete btn-delete-one"
+                    data-id="{{ item.id_prediksi }}"
+                    data-kelas="{{ item.nama_kelas }}"
+                >
+                    ×
+                </button>
+
+
+            </div>
+
+
+            {% endfor %}
+
+
+        </div>
+
+
+        <button
+            type="button"
+            class="delete-all-button"
+            id="btnHapusSemua"
+        >
+            Hapus Semua Riwayat
+        </button>
+
+
+        {% else %}
+
+
+        <div class="empty-history">
+
+            <div class="empty-icon">
+                ♡
+            </div>
+
+            <h3>
+                Belum Ada Riwayat
+            </h3>
+
+            <p>
+                Hasil deteksi akan muncul di sini
+                setelah proses klasifikasi dilakukan.
+            </p>
+
+            <a
+                href="/deteksi"
+                class="secondary-button"
+            >
+                Mulai Deteksi
+            </a>
+
+        </div>
+
+
+        {% endif %}
+
+
+    </main>
+
+
+    <nav class="bottom-nav">
+
+        <a
+            href="/"
+            class="nav-item"
+        >
+            <span>⌂</span>
+            <small>Beranda</small>
+        </a>
+
+
+        <a
+            href="/deteksi"
+            class="nav-item"
+        >
+            <span>＋</span>
+            <small>Deteksi</small>
+        </a>
+
+
+        <a
+            href="/riwayat"
+            class="nav-item active"
+        >
+            <span>◷</span>
+            <small>Riwayat</small>
+        </a>
+
+    </nav>
+
+
+</div>
+
+
+<!-- =====================================
+     POPUP HAPUS SATU
+===================================== -->
+
+<div
+    class="modal-overlay"
+    id="modalHapus"
+>
+
+    <div class="modal-box">
+
+        <div class="modal-icon">
+            !
+        </div>
+
+        <h3>
+            Hapus Riwayat?
+        </h3>
+
+        <p id="pesanHapus">
+            Apakah Anda yakin ingin
+            menghapus riwayat ini?
+        </p>
+
+
+        <div class="modal-buttons">
+
+            <button
+                type="button"
+                class="btn-batal"
+                id="batalHapus"
+            >
+                Batal
+            </button>
+
+
+            <form
+                method="POST"
+                id="formHapus"
+                class="delete-form"
+            >
+
+                <button
+                    type="submit"
+                    class="btn-hapus"
+                >
+                    Ya, Hapus
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================
+     POPUP HAPUS SEMUA
+===================================== -->
+
+<div
+    class="modal-overlay"
+    id="modalHapusSemua"
+>
+
+    <div class="modal-box">
+
+        <div class="modal-icon">
+            !
+        </div>
+
+        <h3>
+            Hapus Semua Riwayat?
+        </h3>
+
+        <p>
+            Semua data riwayat deteksi
+            dan gambar yang tersimpan
+            akan dihapus.
+        </p>
+
+
+        <div class="modal-buttons">
+
+            <button
+                type="button"
+                class="btn-batal"
+                id="batalHapusSemua"
+            >
+                Batal
+            </button>
+
+
+            <form
+                action="{{ url_for('hapus_semua') }}"
+                method="POST"
+                class="delete-form"
+            >
+
+                <button
+                    type="submit"
+                    class="btn-hapus"
+                >
+                    Ya, Hapus Semua
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const modalHapus =
+            document.getElementById(
+                "modalHapus"
+            );
+
+        const modalHapusSemua =
+            document.getElementById(
+                "modalHapusSemua"
+            );
+
+        const formHapus =
+            document.getElementById(
+                "formHapus"
+            );
+
+        const pesanHapus =
+            document.getElementById(
+                "pesanHapus"
+            );
+
+
+        // =====================================
+        // HAPUS SATU
+        // =====================================
+
+        const tombolHapus =
+            document.querySelectorAll(
+                ".btn-delete-one"
+            );
+
+
+        tombolHapus.forEach(
+            function (button) {
+
+                button.addEventListener(
+                    "click",
+                    function () {
+
+                        const id =
+                            this.dataset.id;
+
+                        const kelas =
+                            this.dataset.kelas;
+
+
+                        formHapus.action =
+                            "/hapus/" + id;
+
+
+                        pesanHapus.textContent =
+                            "Apakah Anda yakin ingin menghapus riwayat deteksi "
+                            + kelas + "?";
+
+
+                        modalHapus.classList.add(
+                            "active"
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+
+        // =====================================
+        // BATAL HAPUS SATU
+        // =====================================
+
+        document.getElementById(
+            "batalHapus"
+        ).addEventListener(
+            "click",
+            function () {
+
+                modalHapus.classList.remove(
+                    "active"
+                );
+
+            }
+        );
+
+
+        // =====================================
+        // HAPUS SEMUA
+        // =====================================
+
+        const btnSemua =
+            document.getElementById(
+                "btnHapusSemua"
+            );
+
+
+        if (btnSemua) {
+
+            btnSemua.addEventListener(
+                "click",
+                function () {
+
+                    modalHapusSemua.classList.add(
+                        "active"
+                    );
+
+                }
+            );
+
+        }
+
+
+        // =====================================
+        // BATAL HAPUS SEMUA
+        // =====================================
+
+        document.getElementById(
+            "batalHapusSemua"
+        ).addEventListener(
+            "click",
+            function () {
+
+                modalHapusSemua.classList.remove(
+                    "active"
+                );
+
+            }
+        );
+
+
+        // =====================================
+        // KLIK DI LUAR POPUP
+        // =====================================
+
+        modalHapus.addEventListener(
+            "click",
+            function (event) {
+
+                if (
+                    event.target ===
+                    modalHapus
+                ) {
+
+                    modalHapus.classList.remove(
+                        "active"
+                    );
+
+                }
+
+            }
+        );
+
+
+        modalHapusSemua.addEventListener(
+            "click",
+            function (event) {
+
+                if (
+                    event.target ===
+                    modalHapusSemua
+                ) {
+
+                    modalHapusSemua.classList.remove(
+                        "active"
+                    );
+
+                }
+
+            }
+        );
+
+    }
+);
+
+</script>
+
+
+</body>
+
+</html>

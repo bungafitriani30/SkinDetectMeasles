@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>SkinDetectMeasles</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+</head>
+
+
+<body>
+
+<div class="mobile-app">
+
+    <!-- HEADER -->
+    <header class="top-header">
+
+        <div>
+            <span class="mini-title">
+                DETEKSI DINI CAMPAK
+            </span>
+
+            <h2>SkinDetectMeasles</h2>
+        </div>
+
+        <div class="header-icon">
+            ♡
+        </div>
+
+    </header>
+
+
+    <main>
+
+        <!-- HERO / BAGIAN UTAMA -->
+        <section class="hero-mobile">
+
+            <!-- GAMBAR HERO -->
+            <div class="hero-image-box">
+
+                <img
+                    src="{{ url_for('static', filename='images/hero.png') }}"
+                    alt="Ilustrasi deteksi dini penyakit campak"
+                    class="hero-image"
+                >
+
+            </div>
+
+
+            <span class="pill">
+                Deteksi Citra Kulit
+            </span>
+
+
+            <h1>
+                Kenali Campak
+                <br>
+                Lebih Awal
+            </h1>
+
+
+            <p>
+                SkinDetectMeasles membantu melakukan
+                identifikasi awal penyakit campak
+                berdasarkan citra kulit dengan proses
+                yang sederhana dan mudah digunakan.
+            </p>
+
+
+            <a
+                href="/deteksi"
+                class="main-button"
+            >
+                Mulai Deteksi
+
+                <span>→</span>
+            </a>
+
+        </section>
+
+
+        <!-- CARA KERJA -->
+        <section class="feature-section">
+
+            <div class="section-title">
+
+                <span>
+                    MUDAH DIGUNAKAN
+                </span>
+
+                <h3>
+                    Bagaimana cara kerjanya?
+                </h3>
+
+            </div>
+
+
+            <!-- LANGKAH 1 -->
+            <div class="feature-card">
+
+                <div class="feature-number">
+                    01
+                </div>
+
+                <div>
+
+                    <h4>
+                        Unggah Citra
+                    </h4>
+
+                    <p>
+                        Pilih citra kulit yang ingin
+                        dilakukan pemeriksaan awal.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- LANGKAH 2 -->
+            <div class="feature-card">
+
+                <div class="feature-number">
+                    02
+                </div>
+
+                <div>
+
+                    <h4>
+                        Proses Deteksi
+                    </h4>
+
+                    <p>
+                        Sistem akan memproses citra
+                        menggunakan model klasifikasi
+                        yang telah dilatih.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- LANGKAH 3 -->
+            <div class="feature-card">
+
+                <div class="feature-number">
+                    03
+                </div>
+
+                <div>
+
+                    <h4>
+                        Lihat Hasil
+                    </h4>
+
+                    <p>
+                        Hasil klasifikasi dan tingkat
+                        keyakinan akan ditampilkan
+                        pada aplikasi.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- INFORMASI MEDIS -->
+        <div class="medical-note">
+
+            <span>ⓘ</span>
+
+            <p>
+                Aplikasi ini digunakan sebagai alat bantu
+                deteksi dini dan bukan sebagai pengganti
+                diagnosis tenaga medis.
+            </p>
+
+        </div>
+
+    </main>
+
+
+    <!-- MENU BAWAH -->
+    <nav class="bottom-nav">
+
+        <a
+            href="/"
+            class="nav-item active"
+        >
+            <span>⌂</span>
+            <small>Beranda</small>
+        </a>
+
+
+        <a
+            href="/deteksi"
+            class="nav-item"
+        >
+            <span>＋</span>
+            <small>Deteksi</small>
+        </a>
+
+
+        <a
+            href="/riwayat"
+            class="nav-item"
+        >
+            <span>◷</span>
+            <small>Riwayat</small>
+        </a>
+
+    </nav>
+
+</div>
+
+</body>
+</html>

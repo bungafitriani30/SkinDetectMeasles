@@ -1,0 +1,713 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Hasil Deteksi</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+    <style>
+
+        .result-image-box {
+            width: 100%;
+            overflow: hidden;
+            border-radius: 22px;
+            margin-bottom: 24px;
+        }
+
+        .result-image-box img {
+            width: 100%;
+            max-height: 330px;
+            display: block;
+            object-fit: cover;
+        }
+
+        .result-center {
+            text-align: center;
+        }
+
+        .result-check {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 18px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: #f8deda;
+            color: #9c3f3f;
+
+            font-size: 34px;
+        }
+
+        .result-label {
+            display: block;
+
+            margin-bottom: 8px;
+
+            font-size: 11px;
+            letter-spacing: 3px;
+
+            color: #b15d54;
+        }
+
+        .result-disease {
+            margin: 0;
+
+            font-size: 31px;
+
+            color: #7c302e;
+        }
+
+        .result-description {
+            margin: 10px auto 24px;
+
+            max-width: 360px;
+
+            color: #777;
+
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .confidence-box {
+            margin-top: 18px;
+
+            padding: 18px;
+
+            border: 1px solid #efd8d4;
+            border-radius: 18px;
+
+            text-align: left;
+        }
+
+        .confidence-box span {
+            display: block;
+
+            color: #777;
+
+            font-size: 13px;
+        }
+
+        .confidence-box strong {
+            display: block;
+
+            margin-top: 3px;
+
+            color: #873735;
+
+            font-size: 28px;
+        }
+
+        .info-box {
+            margin-top: 20px;
+
+            padding: 20px;
+
+            border-radius: 18px;
+
+            background: #fff4f1;
+
+            text-align: left;
+        }
+
+        .info-box h3 {
+            margin: 0 0 9px;
+
+            color: #7c302e;
+
+            font-size: 17px;
+        }
+
+        .info-box p {
+            margin: 0;
+
+            color: #666;
+
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .recommendation-box {
+            margin-top: 16px;
+
+            padding: 20px;
+
+            border: 1px solid #efd8d4;
+            border-radius: 18px;
+
+            text-align: left;
+        }
+
+        .recommendation-box h3 {
+            margin: 0 0 13px;
+
+            color: #7c302e;
+
+            font-size: 17px;
+        }
+
+        .recommendation-box ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .recommendation-box li {
+            margin-bottom: 9px;
+
+            color: #666;
+
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .warning-box {
+            margin-top: 18px;
+
+            padding: 16px;
+
+            border-radius: 16px;
+
+            background: #f7f4f3;
+
+            color: #777;
+
+            font-size: 12px;
+            line-height: 1.6;
+
+            text-align: left;
+        }
+
+        .result-actions {
+            margin-top: 22px;
+            padding-bottom: 25px;
+        }
+
+        .result-actions a {
+            box-sizing: border-box;
+
+            display: block;
+
+            width: 100%;
+
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .result-actions .secondary-button {
+            margin-top: 12px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="mobile-app">
+
+
+    <header class="simple-header">
+
+        <a
+            href="/deteksi"
+            class="back-button"
+        >
+            ‹
+        </a>
+
+
+        <div>
+
+            <span class="mini-title">
+                HASIL PEMERIKSAAN
+            </span>
+
+            <h2>
+                Hasil Deteksi
+            </h2>
+
+        </div>
+
+    </header>
+
+
+    <main class="content">
+
+
+        {% if filename %}
+
+        <div class="result-image-box">
+
+            <img
+                src="{{ url_for('static', filename='uploads/' + filename) }}"
+                alt="Citra kulit yang diperiksa"
+            >
+
+        </div>
+
+        {% endif %}
+
+
+        {% if model_ready %}
+
+
+        <div class="result-center">
+
+
+            <div class="result-check">
+                ✓
+            </div>
+
+
+            <span class="result-label">
+                HASIL KLASIFIKASI
+            </span>
+
+
+            <h1 class="result-disease">
+                {{ prediction }}
+            </h1>
+
+
+            <!-- ======================================
+                 DESKRIPSI HASIL
+            ======================================= -->
+
+
+            {% if prediction == "Measles" %}
+
+            <p class="result-description">
+                Hasil klasifikasi citra mengarah pada
+                karakteristik visual penyakit campak
+                (Measles).
+            </p>
+
+
+            {% elif prediction == "Chickenpox" %}
+
+            <p class="result-description">
+                Hasil klasifikasi citra mengarah pada
+                karakteristik visual penyakit cacar air
+                (Chickenpox).
+            </p>
+
+
+            {% elif prediction == "Monkeypox" %}
+
+            <p class="result-description">
+                Hasil klasifikasi citra mengarah pada
+                karakteristik visual Monkeypox (Mpox).
+            </p>
+
+
+            {% elif prediction == "Dermatitis Eksim" %}
+
+            <p class="result-description">
+                Hasil klasifikasi citra mengarah pada
+                karakteristik visual dermatitis atau eksim.
+            </p>
+
+
+            {% endif %}
+
+
+        </div>
+
+
+        <!-- ======================================
+             CONFIDENCE
+        ======================================= -->
+
+
+        <div class="confidence-box">
+
+            <span>
+                Tingkat Keyakinan Model
+            </span>
+
+            <strong>
+                {{ confidence }}%
+            </strong>
+
+        </div>
+
+
+        <!-- ======================================
+             MEASLES
+        ======================================= -->
+
+
+        {% if prediction == "Measles" %}
+
+
+        <div class="info-box">
+
+            <h3>
+                Informasi Campak
+            </h3>
+
+            <p>
+                Campak merupakan penyakit infeksi yang dapat
+                disertai ruam kemerahan pada kulit dan gejala
+                lain seperti demam. Hasil klasifikasi ini
+                digunakan sebagai identifikasi awal berdasarkan
+                citra kulit.
+            </p>
+
+        </div>
+
+
+        <div class="recommendation-box">
+
+            <h3>
+                Saran Tindakan Awal
+            </h3>
+
+            <ul>
+
+                <li>
+                    Beristirahat dengan cukup dan menjaga
+                    kondisi tubuh.
+                </li>
+
+                <li>
+                    Memenuhi kebutuhan cairan agar tubuh
+                    tetap terhidrasi.
+                </li>
+
+                <li>
+                    Mengurangi kontak dekat dengan orang lain
+                    apabila terdapat demam dan ruam yang
+                    dicurigai sebagai campak.
+                </li>
+
+                <li>
+                    Jangan menggaruk atau mengiritasi bagian
+                    kulit yang mengalami ruam.
+                </li>
+
+                <li>
+                    Lakukan pemeriksaan ke dokter atau fasilitas
+                    kesehatan untuk memperoleh pemeriksaan dan
+                    penanganan yang sesuai.
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        <!-- ======================================
+             CHICKENPOX
+        ======================================= -->
+
+
+        {% elif prediction == "Chickenpox" %}
+
+
+        <div class="info-box">
+
+            <h3>
+                Informasi Cacar Air
+            </h3>
+
+            <p>
+                Cacar air dapat menimbulkan ruam dan lesi pada
+                kulit. Model menemukan karakteristik visual
+                citra yang lebih mendekati kelas Chickenpox.
+            </p>
+
+        </div>
+
+
+        <div class="recommendation-box">
+
+            <h3>
+                Saran Tindakan Awal
+            </h3>
+
+            <ul>
+
+                <li>
+                    Beristirahat dengan cukup dan menjaga
+                    kebutuhan cairan tubuh.
+                </li>
+
+                <li>
+                    Hindari menggaruk bagian kulit yang
+                    mengalami ruam atau lesi.
+                </li>
+
+                <li>
+                    Jaga kebersihan kulit dan tangan untuk
+                    mengurangi risiko iritasi atau infeksi
+                    tambahan.
+                </li>
+
+                <li>
+                    Hindari kontak dekat dengan orang lain
+                    apabila terdapat gejala yang dicurigai
+                    sebagai cacar air.
+                </li>
+
+                <li>
+                    Lakukan pemeriksaan ke tenaga kesehatan
+                    apabila gejala bertambah berat atau
+                    menimbulkan kekhawatiran.
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        <!-- ======================================
+             MONKEYPOX
+        ======================================= -->
+
+
+        {% elif prediction == "Monkeypox" %}
+
+
+        <div class="info-box">
+
+            <h3>
+                Informasi Mpox
+            </h3>
+
+            <p>
+                Model menemukan karakteristik visual pada citra
+                yang lebih mendekati kelas Monkeypox (Mpox).
+                Kondisi dengan lesi kulit yang dicurigai sebagai
+                Mpox memerlukan pemeriksaan lebih lanjut oleh
+                tenaga kesehatan.
+            </p>
+
+        </div>
+
+
+        <div class="recommendation-box">
+
+            <h3>
+                Saran Tindakan Awal
+            </h3>
+
+            <ul>
+
+                <li>
+                    Hindari menyentuh atau menggaruk bagian
+                    kulit yang mengalami lesi.
+                </li>
+
+                <li>
+                    Jaga kebersihan tangan dan area kulit yang
+                    mengalami keluhan.
+                </li>
+
+                <li>
+                    Hindari kontak kulit secara langsung dengan
+                    orang lain sampai memperoleh pemeriksaan
+                    lebih lanjut.
+                </li>
+
+                <li>
+                    Jangan berbagi barang pribadi seperti
+                    handuk atau pakaian yang bersentuhan dengan
+                    bagian kulit yang mengalami lesi.
+                </li>
+
+                <li>
+                    Segera lakukan pemeriksaan ke dokter atau
+                    fasilitas kesehatan untuk memastikan
+                    penyebab keluhan.
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        <!-- ======================================
+             DERMATITIS
+        ======================================= -->
+
+
+        {% elif prediction == "Dermatitis Eksim" %}
+
+
+        <div class="info-box">
+
+            <h3>
+                Informasi Dermatitis/Eksim
+            </h3>
+
+            <p>
+                Model menemukan karakteristik visual citra yang
+                lebih mendekati dermatitis atau eksim. Kondisi
+                ini dapat ditandai dengan perubahan pada kulit
+                seperti kemerahan, kering, atau iritasi.
+            </p>
+
+        </div>
+
+
+        <div class="recommendation-box">
+
+            <h3>
+                Saran Tindakan Awal
+            </h3>
+
+            <ul>
+
+                <li>
+                    Hindari menggaruk area kulit yang mengalami
+                    iritasi.
+                </li>
+
+                <li>
+                    Jaga kebersihan kulit dan hindari penggunaan
+                    produk yang diketahui memicu iritasi.
+                </li>
+
+                <li>
+                    Gunakan pelembap yang sesuai untuk membantu
+                    menjaga kelembapan kulit.
+                </li>
+
+                <li>
+                    Perhatikan kemungkinan pemicu seperti sabun,
+                    bahan tertentu, atau kondisi lingkungan.
+                </li>
+
+                <li>
+                    Lakukan pemeriksaan ke tenaga kesehatan
+                    apabila keluhan tidak membaik, menyebar,
+                    atau semakin berat.
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        {% endif %}
+
+
+        <!-- ======================================
+             PERINGATAN
+        ======================================= -->
+
+
+        <div class="warning-box">
+
+            <strong>Perhatian:</strong>
+
+            Hasil aplikasi merupakan alat bantu identifikasi
+            awal berdasarkan klasifikasi citra kulit dan
+            tidak dapat digunakan sebagai diagnosis medis.
+            Diagnosis dan keputusan penanganan tetap harus
+            dilakukan oleh tenaga kesehatan.
+
+        </div>
+
+
+        <div class="result-actions">
+
+
+            <a
+                href="/deteksi"
+                class="primary-button"
+            >
+                Deteksi Gambar Lain
+            </a>
+
+
+            <a
+                href="/riwayat"
+                class="secondary-button"
+            >
+                Lihat Riwayat
+            </a>
+
+
+        </div>
+
+
+        {% else %}
+
+
+        <div class="error-message">
+
+            Model klasifikasi belum dapat digunakan.
+            Pastikan model MobileNetV2 telah berhasil dimuat.
+
+        </div>
+
+
+        {% endif %}
+
+
+    </main>
+
+
+    <nav class="bottom-nav">
+
+
+        <a
+            href="/"
+            class="nav-item"
+        >
+
+            <span>⌂</span>
+            <small>Beranda</small>
+
+        </a>
+
+
+        <a
+            href="/deteksi"
+            class="nav-item active"
+        >
+
+            <span>＋</span>
+            <small>Deteksi</small>
+
+        </a>
+
+
+        <a
+            href="/riwayat"
+            class="nav-item"
+        >
+
+            <span>◷</span>
+            <small>Riwayat</small>
+
+        </a>
+
+
+    </nav>
+
+
+</div>
+
+
+</body>
+
+</html>

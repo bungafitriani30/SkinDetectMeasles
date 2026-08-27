@@ -1,0 +1,1036 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Deteksi Penyakit Kulit</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+    <style>
+
+        .upload-section {
+            padding: 28px 22px 120px;
+        }
+
+        .upload-hero {
+            text-align: center;
+            margin-bottom: 26px;
+        }
+
+        .upload-icon-box {
+            width: 72px;
+            height: 72px;
+
+            margin: 0 auto 18px;
+
+            border-radius: 22px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #f8dfdc;
+            color: #a94343;
+
+            font-size: 30px;
+        }
+
+        .upload-hero h1 {
+            margin: 0;
+
+            color: #6f2d2d;
+
+            font-size: 28px;
+            line-height: 1.25;
+        }
+
+        .upload-hero p {
+            margin: 10px auto 0;
+
+            max-width: 330px;
+
+            color: #777;
+
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .upload-error {
+            margin-bottom: 18px;
+
+            padding: 14px 16px;
+
+            border-radius: 14px;
+
+            background: #fff0ef;
+            color: #993f3f;
+
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .upload-box {
+            padding: 28px 20px;
+
+            border: 2px dashed #e7c7c2;
+            border-radius: 22px;
+
+            background: #fffafa;
+
+            text-align: center;
+
+            transition: 0.2s ease;
+        }
+
+        .upload-box:hover {
+            border-color: #c66d66;
+            background: #fff7f5;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-label {
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 8px;
+
+            padding: 13px 20px;
+
+            border-radius: 14px;
+
+            background: #8f3937;
+            color: #ffffff;
+
+            font-size: 14px;
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition: 0.2s ease;
+
+            box-shadow:
+                0 6px 15px
+                rgba(143, 57, 55, 0.16);
+        }
+
+        .file-label:hover {
+            transform: translateY(-1px);
+            background: #803230;
+        }
+
+        .file-label-icon {
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .upload-help {
+            margin-top: 14px;
+
+            color: #8a8a8a;
+
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .file-name {
+            margin-top: 14px;
+
+            color: #7b403e;
+
+            font-size: 13px;
+            font-weight: 600;
+
+            word-break: break-word;
+        }
+
+        .preview-box {
+            display: none;
+
+            margin-top: 22px;
+
+            padding-top: 20px;
+
+            border-top: 1px solid #f0dcda;
+        }
+
+        .preview-title {
+            margin-bottom: 12px;
+
+            color: #80504d;
+
+            font-size: 12px;
+            font-weight: 600;
+
+            letter-spacing: 1px;
+
+            text-align: left;
+        }
+
+        .preview-wrapper {
+            position: relative;
+
+            overflow: hidden;
+
+            border-radius: 18px;
+
+            background: #f5eeee;
+        }
+
+        .preview-wrapper img {
+            width: 100%;
+            height: 250px;
+
+            display: block;
+
+            object-fit: cover;
+        }
+
+        .remove-image {
+            position: absolute;
+
+            top: 10px;
+            right: 10px;
+
+            width: 36px;
+            height: 36px;
+
+            padding: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border: none;
+            border-radius: 50%;
+
+            background: rgba(255, 255, 255, 0.96);
+            color: #9b3e3e;
+
+            font-size: 24px;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 4px 14px
+                rgba(0, 0, 0, 0.16);
+        }
+
+        .remove-image-text {
+            margin-top: 14px;
+
+            padding: 8px 14px;
+
+            border: none;
+
+            background: transparent;
+
+            color: #9b3e3e;
+
+            font-size: 13px;
+            font-weight: 600;
+
+            cursor: pointer;
+        }
+
+        .detect-button {
+            width: 100%;
+
+            margin-top: 20px;
+
+            padding: 15px 18px;
+
+            border: none;
+            border-radius: 15px;
+
+            background: linear-gradient(
+                135deg,
+                #8f3937,
+                #b65450
+            );
+
+            color: #ffffff;
+
+            font-size: 15px;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 10px 24px
+                rgba(143, 57, 55, 0.20);
+        }
+
+        .detect-button:disabled {
+            opacity: 0.65;
+
+            cursor: not-allowed;
+        }
+
+        .upload-note {
+            display: flex;
+
+            gap: 10px;
+
+            margin-top: 18px;
+
+            padding: 14px;
+
+            border-radius: 14px;
+
+            background: #f8f5f4;
+
+            color: #777;
+
+            font-size: 11px;
+            line-height: 1.6;
+
+            text-align: left;
+        }
+
+        .upload-note-icon {
+            color: #a34a46;
+
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+
+        /* ==========================================
+           POPUP KONFIRMASI HAPUS GAMBAR
+        ========================================== */
+
+        .modal-overlay {
+            display: none;
+
+            position: fixed;
+
+            inset: 0;
+
+            padding: 20px;
+
+            align-items: center;
+            justify-content: center;
+
+            background: rgba(0, 0, 0, 0.45);
+
+            z-index: 99999;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-box {
+            width: 100%;
+            max-width: 340px;
+
+            padding: 28px 22px;
+
+            border-radius: 22px;
+
+            background: #ffffff;
+
+            text-align: center;
+
+            box-shadow:
+                0 15px 40px
+                rgba(0, 0, 0, 0.20);
+        }
+
+        .modal-icon {
+            width: 60px;
+            height: 60px;
+
+            margin: 0 auto 16px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: #f8dddd;
+            color: #a53c3c;
+
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .modal-box h3 {
+            margin: 0 0 10px;
+
+            color: #672b2b;
+
+            font-size: 21px;
+        }
+
+        .modal-box p {
+            margin: 0;
+
+            color: #777;
+
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .modal-actions {
+            display: flex;
+
+            gap: 10px;
+
+            margin-top: 24px;
+        }
+
+        .modal-actions button {
+            flex: 1;
+
+            padding: 13px;
+
+            border-radius: 12px;
+
+            font-size: 14px;
+            font-weight: 600;
+
+            cursor: pointer;
+        }
+
+        .btn-cancel {
+            border: 1px solid #ddd;
+
+            background: #ffffff;
+            color: #555;
+        }
+
+        .btn-confirm-delete {
+            border: none;
+
+            background: #9d3e3e;
+            color: #ffffff;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="mobile-app">
+
+
+    <header class="simple-header">
+
+        <a
+            href="/"
+            class="back-button"
+        >
+            ‹
+        </a>
+
+        <div>
+
+            <span class="mini-title">
+                DETEKSI CITRA
+            </span>
+
+            <h2>
+                Deteksi Penyakit Kulit
+            </h2>
+
+        </div>
+
+    </header>
+
+
+    <main class="content upload-section">
+
+
+        <div class="upload-hero">
+
+            <div class="upload-icon-box">
+                ✦
+            </div>
+
+            <h1>
+                Unggah Citra Kulit
+            </h1>
+
+            <p>
+                Pilih gambar kulit yang ingin dianalisis
+                untuk melakukan identifikasi awal.
+            </p>
+
+        </div>
+
+
+        {% if error %}
+
+        <div class="upload-error">
+            {{ error }}
+        </div>
+
+        {% endif %}
+
+
+        <form
+            action="{{ url_for('deteksi') }}"
+            method="POST"
+            enctype="multipart/form-data"
+            id="formDeteksi"
+        >
+
+
+            <div class="upload-box">
+
+
+                <input
+                    type="file"
+                    name="image"
+                    id="imageInput"
+                    class="file-input"
+                    accept=".jpg,.jpeg,.png,.webp"
+                    required
+                >
+
+
+                <label
+                    for="imageInput"
+                    class="file-label"
+                >
+
+                    <span class="file-label-icon">
+                        ＋
+                    </span>
+
+                    <span>
+                        Pilih Gambar
+                    </span>
+
+                </label>
+
+
+                <div class="upload-help">
+
+                    JPG, JPEG, PNG, atau WEBP
+                    <br>
+
+                    Maksimal 5 MB
+
+                </div>
+
+
+                <div
+                    id="fileName"
+                    class="file-name"
+                >
+                    Belum ada gambar yang dipilih
+                </div>
+
+
+                <div
+                    id="previewBox"
+                    class="preview-box"
+                >
+
+
+                    <div class="preview-title">
+                        PREVIEW CITRA
+                    </div>
+
+
+                    <div class="preview-wrapper">
+
+
+                        <img
+                            id="previewImage"
+                            src=""
+                            alt="Preview citra kulit"
+                        >
+
+
+                        <button
+                            type="button"
+                            id="removeImage"
+                            class="remove-image"
+                            aria-label="Hapus gambar"
+                            title="Hapus gambar"
+                        >
+                            ×
+                        </button>
+
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        id="removeImageText"
+                        class="remove-image-text"
+                    >
+                        Hapus Gambar
+                    </button>
+
+
+                </div>
+
+
+            </div>
+
+
+            <button
+                type="submit"
+                id="btnDeteksi"
+                class="detect-button"
+            >
+                Mulai Deteksi
+            </button>
+
+
+            <div class="upload-note">
+
+                <div class="upload-note-icon">
+                    ⓘ
+                </div>
+
+                <div>
+                    Gunakan gambar kulit yang terlihat jelas,
+                    memiliki pencahayaan yang cukup, dan tidak
+                    terlalu buram agar proses klasifikasi dapat
+                    dilakukan dengan lebih baik.
+                </div>
+
+            </div>
+
+
+        </form>
+
+
+    </main>
+
+
+    <nav class="bottom-nav">
+
+
+        <a
+            href="/"
+            class="nav-item"
+        >
+            <span>⌂</span>
+            <small>Beranda</small>
+        </a>
+
+
+        <a
+            href="/deteksi"
+            class="nav-item active"
+        >
+            <span>＋</span>
+            <small>Deteksi</small>
+        </a>
+
+
+        <a
+            href="/riwayat"
+            class="nav-item"
+        >
+            <span>◷</span>
+            <small>Riwayat</small>
+        </a>
+
+
+    </nav>
+
+
+</div>
+
+
+<!-- ==========================================
+     POPUP KONFIRMASI HAPUS GAMBAR
+========================================== -->
+
+<div
+    id="deleteImageModal"
+    class="modal-overlay"
+>
+
+    <div class="modal-box">
+
+
+        <div class="modal-icon">
+            !
+        </div>
+
+
+        <h3>
+            Hapus Gambar?
+        </h3>
+
+
+        <p>
+            Apakah Anda yakin ingin menghapus
+            gambar yang sudah dipilih?
+        </p>
+
+
+        <div class="modal-actions">
+
+
+            <button
+                type="button"
+                id="cancelDeleteImage"
+                class="btn-cancel"
+            >
+                Batal
+            </button>
+
+
+            <button
+                type="button"
+                id="confirmDeleteImage"
+                class="btn-confirm-delete"
+            >
+                Ya, Hapus
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<script>
+
+
+const imageInput =
+    document.getElementById(
+        "imageInput"
+    );
+
+const previewBox =
+    document.getElementById(
+        "previewBox"
+    );
+
+const previewImage =
+    document.getElementById(
+        "previewImage"
+    );
+
+const fileName =
+    document.getElementById(
+        "fileName"
+    );
+
+const formDeteksi =
+    document.getElementById(
+        "formDeteksi"
+    );
+
+const btnDeteksi =
+    document.getElementById(
+        "btnDeteksi"
+    );
+
+const removeImage =
+    document.getElementById(
+        "removeImage"
+    );
+
+const removeImageText =
+    document.getElementById(
+        "removeImageText"
+    );
+
+const deleteImageModal =
+    document.getElementById(
+        "deleteImageModal"
+    );
+
+const cancelDeleteImage =
+    document.getElementById(
+        "cancelDeleteImage"
+    );
+
+const confirmDeleteImage =
+    document.getElementById(
+        "confirmDeleteImage"
+    );
+
+
+/* ==========================================
+   PILIH GAMBAR
+========================================== */
+
+imageInput.addEventListener(
+    "change",
+    function () {
+
+        const file =
+            this.files[0];
+
+        if (!file) {
+
+            resetImage();
+
+            return;
+        }
+
+
+        const allowedTypes = [
+            "image/jpeg",
+            "image/png",
+            "image/webp"
+        ];
+
+
+        if (
+            !allowedTypes.includes(
+                file.type
+            )
+        ) {
+
+            alert(
+                "Format gambar harus JPG, JPEG, PNG, atau WEBP."
+            );
+
+            resetImage();
+
+            return;
+        }
+
+
+        const maxSize =
+            5 * 1024 * 1024;
+
+
+        if (
+            file.size > maxSize
+        ) {
+
+            alert(
+                "Ukuran gambar maksimal 5 MB."
+            );
+
+            resetImage();
+
+            return;
+        }
+
+
+        fileName.textContent =
+            file.name;
+
+
+        const reader =
+            new FileReader();
+
+
+        reader.onload =
+            function (event) {
+
+                previewImage.src =
+                    event.target.result;
+
+                previewBox.style.display =
+                    "block";
+
+            };
+
+
+        reader.readAsDataURL(
+            file
+        );
+
+    }
+);
+
+
+/* ==========================================
+   RESET GAMBAR
+========================================== */
+
+function resetImage() {
+
+    imageInput.value = "";
+
+    previewImage.src = "";
+
+    previewBox.style.display =
+        "none";
+
+    fileName.textContent =
+        "Belum ada gambar yang dipilih";
+
+}
+
+
+/* ==========================================
+   BUKA POPUP HAPUS
+========================================== */
+
+function showDeleteImageModal() {
+
+    if (
+        !imageInput.files.length
+    ) {
+
+        return;
+    }
+
+    deleteImageModal.classList.add(
+        "show"
+    );
+
+}
+
+
+/* ==========================================
+   TUTUP POPUP
+========================================== */
+
+function closeDeleteImageModal() {
+
+    deleteImageModal.classList.remove(
+        "show"
+    );
+
+}
+
+
+/* ==========================================
+   TOMBOL X
+========================================== */
+
+removeImage.addEventListener(
+    "click",
+    function () {
+
+        showDeleteImageModal();
+
+    }
+);
+
+
+/* ==========================================
+   TOMBOL HAPUS GAMBAR
+========================================== */
+
+removeImageText.addEventListener(
+    "click",
+    function () {
+
+        showDeleteImageModal();
+
+    }
+);
+
+
+/* ==========================================
+   BATAL
+========================================== */
+
+cancelDeleteImage.addEventListener(
+    "click",
+    function () {
+
+        closeDeleteImageModal();
+
+    }
+);
+
+
+/* ==========================================
+   YA, HAPUS
+========================================== */
+
+confirmDeleteImage.addEventListener(
+    "click",
+    function () {
+
+        resetImage();
+
+        closeDeleteImageModal();
+
+    }
+);
+
+
+/* ==========================================
+   KLIK AREA GELAP = BATAL
+========================================== */
+
+deleteImageModal.addEventListener(
+    "click",
+    function (event) {
+
+        if (
+            event.target ===
+            deleteImageModal
+        ) {
+
+            closeDeleteImageModal();
+
+        }
+
+    }
+);
+
+
+/* ==========================================
+   SUBMIT
+========================================== */
+
+formDeteksi.addEventListener(
+    "submit",
+    function (event) {
+
+        if (
+            !imageInput.files.length
+        ) {
+
+            event.preventDefault();
+
+            alert(
+                "Silakan pilih gambar terlebih dahulu."
+            );
+
+            return;
+        }
+
+
+        btnDeteksi.disabled =
+            true;
+
+        btnDeteksi.textContent =
+            "Memproses Citra...";
+
+    }
+);
+
+
+</script>
+
+
+</body>
+
+</html>
